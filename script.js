@@ -7,11 +7,11 @@ dobInput.addEventListener("input", () => {
   const today = new Date();
 
   if (isNaN(dob.getTime())) {
-    error.textContent = "⚠️ Please select a valid date.";
+    error.textContent = " Please select a valid date.";
     output.textContent = "--";
     return;
   } else if (dob > today) {
-    error.textContent = "⚠️ Date of birth cannot be in the future.";
+    error.textContent = " Date of birth cannot be in the future.";
     output.textContent = "--";
     return;
   } else {
