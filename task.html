@@ -1,21 +1,34 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Live Age Calculator</title>
-  <link rel="stylesheet" href="style.css" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ToDo App</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="card">
-    <h2>Live Age Calculator</h2>
-    <input type="date" id="dob" />
-    <p id="error"></p>
-    <div class="result-box">
-      <h3>Your Age</h3>
-      <div id="output">--</div>
+  <div class="container">
+    <div class="stats-container">
+      <div class="details">
+        <h1>ToDo App</h1>
+        <p>Keep it Up</p>
+        <div id="progressBar">
+          <div id="progress"></div>
+        </div>
+      </div>
+      <div class="stats-number">
+        <p id="number">0 / 0</p>
+      </div>
     </div>
+
+    <form>
+      <input type="text" id="taskInput" placeholder="Write Your Task">
+      <button id="newTask" type="submit">+</button>
+    </form>
+
+    <ul class="task-list"></ul>
   </div>
+
   <script src="script.js"></script>
 </body>
 </html>

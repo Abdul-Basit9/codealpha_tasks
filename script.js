@@ -1,56 +1,74 @@
-const dobInput = document.getElementById("dob");
-const output = document.getElementById("output");
-const error = document.getElementById("error");
+let tasks = [];
 
-dobInput.addEventListener("input", () => {
-  const dob = new Date(dobInput.value);
-  const today = new Date();
+const addTask = () => {
+  const taskInput = document.getElementById("taskInput");
+  const text = taskInput.value.trim();
 
-  if (isNaN(dob.getTime())) {
-    error.textContent = " Please select a valid date.";
-    output.textContent = "--";
-    return;
-  } else if (dob > today) {
-    error.textContent = " Date of birth cannot be in the future.";
-    output.textContent = "--";
-    return;
-  } else {
-    error.textContent = "";
-    calculateAgeLive(dob);
+  if (text !== "") {
+    tasks.push({ text: text, completed: false });
+    taskInput.value = "";
+    updateTaskList();
+    updateProgress();
   }
+};
+
+const updateTaskList = () => {
+  const taskList = document.querySelector(".task-list");
+  taskList.innerHTML = "";
+
+  tasks.forEach((task, index) => {
+    const listItem = document.createElement("li");
+
+    listItem.innerHTML = `
+      <div class="taskItem">
+        <div class="task ${task.completed ? "completed" : ""}">
+          <input type="checkbox" class="checkbox" ${task.completed ? "checked" : ""} onchange="toggleTaskComplete(${index})" />
+          <p>${task.text}</p>
+        </div>
+        <div class="icons">
+          <img src="edit.png" onclick="editTask(${index})" />
+          <img src="bin.png" onclick="deleteTask(${index})" />
+        </div>
+      </div>
+    `;
+
+    taskList.appendChild(listItem);
+  });
+};
+
+const toggleTaskComplete = (index) => {
+  tasks[index].completed = !tasks[index].completed;
+  updateTaskList();
+  updateProgress();
+};
+
+const editTask = (index) => {
+  const newText = prompt("Edit your task:", tasks[index].text);
+  if (newText !== null && newText.trim() !== "") {
+    tasks[index].text = newText.trim();
+    updateTaskList();
+  }
+};
+
+const deleteTask = (index) => {
+  tasks.splice(index, 1);
+  updateTaskList();
+  updateProgress();
+};
+
+const updateProgress = () => {
+  const completed = tasks.filter(task => task.completed).length;
+  const total = tasks.length;
+
+  const number = document.getElementById("number");
+  const progress = document.getElementById("progress");
+
+  number.textContent = `${completed} / ${total}`;
+  const percent = total === 0 ? 0 : (completed / total) * 100;
+  progress.style.width = `${percent}%`;
+};
+
+document.getElementById("newTask").addEventListener("click", function (e) {
+  e.preventDefault();
+  addTask();
 });
-
-function calculateAgeLive(dob) {
-  clearInterval(window.ageTimer); // Clear previous timer if exists
-
-  window.ageTimer = setInterval(function updateAge() {
-    const now = new Date();
-
-    let years = now.getFullYear() - dob.getFullYear();
-    let months = now.getMonth() - dob.getMonth();
-    let days = now.getDate() - dob.getDate();
-    let hours = now.getHours() - dob.getHours();
-    let minutes = now.getMinutes() - dob.getMinutes();
-    let seconds = now.getSeconds() - dob.getSeconds();
-
-    if (seconds < 0) {
-      seconds = seconds + 60;
-      minutes = minutes - 1;
-    } else if (minutes < 0) {
-      minutes = minutes + 60;
-      hours = hours - 1;
-    } else if (hours < 0) {
-      hours = hours + 24;
-      days = days - 1;
-    } else if (days < 0) {
-      months = months - 1;
-      const prevMonthDays = new Date(now.getFullYear(), now.getMonth(), 0).getDate();
-      days = days + prevMonthDays;
-    } else if (months < 0) {
-      months = months + 12;
-      years = years - 1;
-    }
-
-    output.textContent = `${years}y ${months}m ${days}d ${hours}h ${minutes}m ${seconds}s`;
-  }, 1000);
-}
